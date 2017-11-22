@@ -22,6 +22,7 @@
              :weight revisions
              :size code} (rest inverted-path))))
 
+;;;; BOGUS
 (defn merge-hierarchies [h1 h2]
   (merge-with  #(if (vector? %) (vec (concat % %2)) %)
                h1 h2))
@@ -33,6 +34,7 @@
   {:pre [(not (empty? lines-as-fields))]}
   (reduce add-file-to-hierarchy {} lines-as-fields))
 
+;;; This should go into a "jsonify" module, in a saner setup
 (def jsonify-hierarchy nil)
 
 (defn jsonify-file-node [{name :name weight :weight size :size}]
