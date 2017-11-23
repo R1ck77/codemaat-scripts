@@ -17,12 +17,10 @@
 (defn convert-to-file-node [revisions size]
   {:weight revisions, :size size})
 
-(defn convert-to-node [module revisions size]
-  (let [inverted-path-components (split-module module)]
-    ))
-
-(defn add-file-to-hierarchy [hierarchy [module revisions code :as fields]]
-  (conj hierarchy [module (convert-to-file-node revisions code)]))
+(defn add-file-to-hierarchy [hierarchy [module revisions lines :as fields]]
+  (assoc-in hierarchy
+            (split-module module)
+            (convert-to-file-node revisions lines)))
 
 
 (defn create-hierarchy [lines-as-fields]
