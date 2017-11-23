@@ -4,7 +4,7 @@
 
 (deftest test-to-json
   (testing "can convert a single file"
-    (is (= "{\n\"name\" : \"foo\",\n\"weight\" : \"5\",\"size\" : \"7\"\n}"
+    (is (= "{\n\"name\" : \"foo\",\n\"weight\" : \"5\",\n\"size\" : \"7\"\n}"
            (to-json {"foo" {:weight 5, :size 7}})))))
 
 

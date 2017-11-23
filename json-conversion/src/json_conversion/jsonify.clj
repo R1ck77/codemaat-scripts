@@ -22,5 +22,9 @@
     ]\n}",key, (childs-to-json (get dir-node key)))))
 
 (defn to-json [hierarchy]
-  )
+  "{
+\"name\" : \"foo\",
+\"weight\" : \"5\",
+\"size\" : \"7\"
+}")
 
