@@ -14,18 +14,16 @@
 (defn split-module [module]
   (cstring/split module (re-pattern File/separator)))
 
-(defn convert-to-file-node [module revisions size]
-  {:name module, :weight revisions, :size size})
+(defn convert-to-file-node [revisions size]
+  {:weight revisions, :size size})
 
 (defn convert-to-node [module revisions size]
   (let [inverted-path-components (split-module module)]
-    
     ))
 
 (defn add-file-to-hierarchy [hierarchy [module revisions code :as fields]]
-  (conj hierarchy (apply convert-to-file-node fields)))
+  (conj hierarchy [module (convert-to-file-node revisions code)]))
 
-(defn add-file-to-hierarchy [h [name revisions code :as fields]])
 
 (defn create-hierarchy [lines-as-fields]
   {:pre [(not (empty? lines-as-fields))]}

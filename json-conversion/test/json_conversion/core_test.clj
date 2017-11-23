@@ -5,21 +5,27 @@
 (deftest test-add-file-to-hierarchy
   (testing "can add a single file to an empty hierarchy"
     (is (= {"foo" {:weight 5 :size 7}}
-           (add-to-file-hierarchy {}
+           (add-file-to-hierarchy {}
                                   ["foo" 5 7]))))
   (testing "can add a single file to a hierarchy that contains another file"
     (is (= {"foo" {:weight 5 :size 7}
             "bar" { :weight 2 :size 1}}
-           (add-to-file-hierarchy {"bar" {:weight 2 :size 1}}
+           (add-file-to-hierarchy {"bar" {:weight 2 :size 1}}
                                   ["foo" 5 7]))))
   (testing "can add a file inside a directory into an empty hierarchy"
-    (is (= {"foo" {
+    (is (= {
+            "foo" {
                    "bar" {
                           :weight 3
                           :size 5}}}
-           (add-to-file-hierarchy {} ["foo/bar" 3 5]))))
+           (add-file-to-hierarchy {} ["foo/bar" 3 5]))))
   (testing "can add a file deep in directories into an empty hierarchy"
-    (is (= {"foo" {"bar" {"baz" {:weight 3, :size 5}}}}
-           (add-to-file-hierarchy {} ["foo/bar/baz" 3 5])))))
+    (is (= {
+            "foo" {
+                   "bar" {
+                          "baz" {
+                                 :weight 3
+                                 :size 5}}}}
+           (add-file-to-hierarchy {} ["foo/bar/baz" 3 5])))))
 
 
