@@ -2,6 +2,8 @@
   (:require [clojure.test :refer :all]
             [json-conversion.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest test-add-file-to-hierarchy
+  (testing "adding a single file to an empty hierarchy"
+    (is (= [{:name "bar" :weight 1 :size 1}] (add-to-file-hierarchy [] ["foo" 1 1])))))
+
+
