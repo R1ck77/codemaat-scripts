@@ -17,8 +17,8 @@
 (defn convert-to-file-node [module revisions size]
   {:name module, :weight revisions, :size size})
 
-(defn add-to-file-hierarchy [hierarchy [module revisions code :as fields]]
-  [(apply convert-to-file-node fields)])
+(defn add-file-to-hierarchy [hierarchy [module revisions code :as fields]]
+  (conj hierarchy (apply convert-to-file-node fields)))
 
 (defn add-file-to-hierarchy [h [name revisions code :as fields]])
 
