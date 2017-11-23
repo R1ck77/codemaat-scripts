@@ -26,4 +26,10 @@
   {:pre [(not (empty? lines-as-fields))]}
   (reduce add-file-to-hierarchy {} lines-as-fields))
 
+(defn hierarchy-from-file [filename]
+  (reduce #(add-file-to-hierarchy % %2)
+          {}  (read-file filename)))
+
+(defn -main [& args]
+  (println { "root" (hierarchy-from-file (first args))}))
 

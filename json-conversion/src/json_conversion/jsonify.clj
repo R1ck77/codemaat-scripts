@@ -21,8 +21,6 @@
         %s
     ]\n}",key, (childs-to-json (get dir-node key)))))
 
-(defn hierarchy-to-json [hierarchy]
-  (if (contains? hierarchy :name)
-    (file-node-to-json hierarchy)
-    (dir-node-to-json hierarchy)))
+(defn to-json [hierarchy]
+  )
 

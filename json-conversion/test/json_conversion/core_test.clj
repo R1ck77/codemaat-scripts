@@ -17,6 +17,13 @@
            (add-file-to-hierarchy {} ["foo/bar" 3 5]))))
   (testing "can add a file deep in directories into an empty hierarchy"
     (is (= {"foo" {"bar" {"baz" { :weight 3, :size 5}}}}
-           (add-file-to-hierarchy {} ["foo/bar/baz" 3 5])))))
+           (add-file-to-hierarchy {} ["foo/bar/baz" 3 5]))))
+  (testing "can add a nested file to a hierarchy with a plain file"
+    (is (= {"foo" {"bar" {"baz" { :weight 3, :size 5}}},  "x" { :weight 0 :size -1}}
+           (add-file-to-hierarchy {"x" { :weight 0 :size -1}} ["foo/bar/baz" 3 5]))))
+  (testing "can add a nested file to a hierarchy with a partially overlapping tree"
+    (is (= {"foo" {"x"  { :weight 0, :size -1}
+                   "bar" {"baz" { :weight 3, :size 5}}}}
+           (add-file-to-hierarchy {"foo" { "x" { :weight 0 :size -1}}} ["foo/bar/baz" 3 5])))))
 
 
