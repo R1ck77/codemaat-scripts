@@ -4,6 +4,7 @@
 
 (deftest test-add-file-to-hierarchy
   (testing "adding a single file to an empty hierarchy"
-    (is (= [{:name "bar" :weight 1 :size 1}] (add-to-file-hierarchy [] ["foo" 1 1])))))
+    (is (= [{:name "foo" :weight 5 :size 7}]
+           (add-to-file-hierarchy [] ["foo" 5 7])))))
 
 
