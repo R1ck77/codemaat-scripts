@@ -22,7 +22,6 @@
             (split-module module)
             (convert-to-file-node revisions lines)))
 
-
 (defn create-hierarchy [lines-as-fields]
   {:pre [(not (empty? lines-as-fields))]}
   (reduce add-file-to-hierarchy {} lines-as-fields))
