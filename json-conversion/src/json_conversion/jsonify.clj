@@ -1,30 +1,25 @@
 (ns json-conversion.jsonify)
 
-(def hierarchy-to-json nil)
+(def convert-hierarchy)
 
-(defn file-node-to-json [{name :name weight :weight size :size}]
-  (format
-"{ 
-    \"name\" : \"%s\",
-    \"size\" : \"%s\",
-    \"weight\" : \"%s\"
-}", name, size, weight))
+(defn leaf-to-json [name content]
+  (str "{
+\"name\" : \"" name "\",
+\"weight\" : \"" (:weight content) "\",
+\"size\" : \"" (:size content) "\"\n}\n"))
 
-(defn childs-to-json [child-nodes]
-  (apply str (interpose "," (map hierarchy-to-json child-nodes))))
+(defn branch-to-json [name hierarchy]
+  (str "{
+\"name\" : \"" name "\",
+\"children\" : [\n" 
+       (apply str (interpose "," (map convert-hierarchy hierarchy)))
 
-(defn dir-node-to-json [dir-node]
-  (let [key (first (keys dir-node))]
-    (format "{
-    \"name\" : \"%s\",
-    \"children\" : [
-        %s
-    ]\n}",key, (childs-to-json (get dir-node key)))))
+       "]
+}\n"))
 
-(defn to-json [hierarchy]
-  "{
-\"name\" : \"foo\",
-\"weight\" : \"5\",
-\"size\" : \"7\"
-}")
+(defn convert-hierarchy [[name content]]
+  (if (contains? content :weight)    
+    (leaf-to-json name content)
+    (branch-to-json name content)))
+
 
