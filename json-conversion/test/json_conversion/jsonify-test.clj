@@ -21,6 +21,35 @@
 }
 ]
 }
-" (convert-hierarchy ["foo" { "bar" { :weight 3, :size 2}}])))))
+" (convert-hierarchy ["foo" { "bar" { :weight 3, :size 2}}]))))
+  (testing "can do unimmaginable things"
+    (is (= "{
+\"name\" : \"foo\",
+\"children\" : [
+{
+\"name\" : \"bar\",
+\"weight\" : \"3\",
+\"size\" : \"2\"
+}
+,{
+\"name\" : \"baz\",
+\"children\" : [
+{
+\"name\" : \"foobar\",
+\"children\" : [
+{
+\"name\" : \"baz\",
+\"weight\" : \"-1\",
+\"size\" : \"-2\"
+}
+]
+}
+]
+}
+]
+}
+" (convert-hierarchy ["foo" {
+                             "bar" { :weight 3, :size 2}
+                             "baz" { "foobar" {"baz" {:weight -1, :size -2}}}}])))))
 
 
