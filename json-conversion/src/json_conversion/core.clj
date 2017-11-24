@@ -17,19 +17,21 @@
 (defn convert-to-file-node [revisions size]
   {:weight revisions, :size size})
 
-(defn add-file-to-hierarchy [hierarchy [module revisions lines :as fields]]
+(defn add-file-to-hierarchy [commits hierarchy [module revisions lines :as fields]]
   (assoc-in hierarchy
             (split-module module)
-            (convert-to-file-node revisions lines)))
+            (convert-to-file-node (double (/ (Double/valueOf revisions) commits)) lines)))
 
 (defn create-hierarchy [lines-as-fields]
   {:pre [(not (empty? lines-as-fields))]}
   (reduce add-file-to-hierarchy {} lines-as-fields))
 
-(defn hierarchy-from-file [filename]
-  (reduce #(add-file-to-hierarchy % %2)
+(defn hierarchy-from-file [filename commits]
+  (reduce (partial add-file-to-hierarchy commits)
           {}  (read-file filename)))
 
 (defn -main [& args]
-  (println { "root" (hierarchy-from-file (first args))}))
+  (let [revisions (Integer/valueOf (second args))]
+    (println (json/convert-hierarchy ["root" (hierarchy-from-file (first args)
+                                                                  revisions)]))))
 
