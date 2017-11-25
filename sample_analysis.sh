@@ -3,16 +3,20 @@
 # current script location. Blessed be SO…
 ME_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CODE_MAAT="java -jar ${ME_DIR}/code-maat-*-standalone.jar"
+JSON_CONVERSION_DIR="/home/dimeo/devel/codemaat-scripts/json-conversion"
 
 # check some old vr theater files, just for sport
 FIRST_COMMIT=`git rev-list --max-parents=0 HEAD`
 LAST_COMMIT=8c338cd6a8e71fb8d678ddb4abc02bb26e88af8b
 WATCHED_FILES=.
 
+echo "NUMBER OF COMMITS: 110 (FIXED)"
+
 GIT_HISTORY=`mktemp -t git_history_XXXX.txt`
 CLOC_RESULT=`mktemp -t cloc_XXXX.csv`
 CODEMAT_RESULTS=`mktemp -t codemaat_XXXX.csv`
 MERGED_RESULTS=`mktemp -t merged_XXXX.csv`
+JSON_RESULTS=${MERGED_RESULTS}.json
 
 echo "* writing git output to ${GIT_HISTORY}…"
 git log --pretty=format:'[%h] "%an" %ad %s' --date=short --numstat ${FIRST_COMMIT}..${LAST_COMMIT} -- ${WATCHED_FILES}  >${GIT_HISTORY}
@@ -31,3 +35,8 @@ cloc --by-file --csv --quiet ${WATCHED_FILES} --report-file=${CLOC_RESULT}
 
 echo "* merging the complexity and changes into ${MERGED_RESULTS}…"
 python ${ME_DIR}/scripts\ 4/merge_comp_freqs.py ${CODEMAT_RESULTS} ${CLOC_RESULT} >${MERGED_RESULTS}
+
+echo "* converting the complexity into json…"
+pushd $JSON_CONVERSION_DIR
+lein run ${MERGED_RESULTS} 110 >${JSON_RESULTS}
+popd
