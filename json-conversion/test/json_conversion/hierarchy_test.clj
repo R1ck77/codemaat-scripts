@@ -1,4 +1,4 @@
-(ns json-conversion.core-test
+(ns json-conversion.hierarchy-test
   (:require [clojure.test :refer :all]
             [json-conversion.core :refer :all]))
 
