@@ -1,6 +1,7 @@
 (ns json-conversion.core
-  (:import [java.io.File])
-  (:require [json-conversion.read :as read]
+  (:import [java.io File])
+  (:require [clojure.string :refer [split-lines] :as cstring]
+            [json-conversion.read :as read]
             [json-conversion.jsonify :as json]))
 
 (defn compute-normalization [xlines normalization]
@@ -30,16 +31,24 @@
   (reduce add-file-to-hierarchy 
           {}  (normalize-data (read/read-merged-file-contents (slurp filename)) commits)))
 
+(defn common-files [codemaat-contents cloc-contents]
+  (apply hash-set (map first (filter #(contains? cloc-contents (first %)) codemaat-contents))))
+
+;;; FIXME this is too big!
 (defn merge-data [codemaat-contents cloc-contents]
-  
-)
+  (map #(apply str (interpose "," %)) 
+       (reduce #(conj % [%2 
+                         (str (:revisions (get codemaat-contents %2)))
+                         (str (:code (get cloc-contents %2)))])
+               [["module" "revisions" "code"]] 
+               (common-files codemaat-contents cloc-contents))))
 
 (defn merge [codemaat-file cloc-file]
-  (merge-data (read/read-codemaat-contents (slurp codemaat-file)) 
-              (read/read-cloc-contents (slurp cloc-file))))
+  (merge-data (read/into-dictionary (read/read-codemaat-contents (slurp codemaat-file))) 
+              (read/into-dictionary (read/read-cloc-contents (slurp cloc-file)))))
 
 (defn -main [& args]
   (case (first args)
     "jsonify" (println (json/convert-hierarchy ["root" (hierarchy-from-file (first args) (Integer/valueOf (nth args 2)))]))
-    "merge" (println (merge (first args) (second args)))))
+    "merge" (dorun (map println (merge (second args) (nth args 2))))))
 
