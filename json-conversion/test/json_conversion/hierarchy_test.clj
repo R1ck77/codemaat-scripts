@@ -1,6 +1,6 @@
 (ns json-conversion.hierarchy-test
   (:require [clojure.test :refer :all]
-            [json-conversion.core :refer :all]))
+            [json-conversion.hierarchy :refer :all]))
 
 (deftest test-add-file-to-hierarchy
   (testing "can add a single file to an empty hierarchy"
