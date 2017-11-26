@@ -23,7 +23,7 @@
 (defn convert-cloc-values [fields]
   (into {}  
         (map #(vector % %2) 
-             cloc-field-names (map #(apply % %2) 
+             cloc-field-names (map #(% %2) 
                                    cloc-conversions fields))))
 
 (defn read-csv-contents 
