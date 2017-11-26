@@ -1,16 +1,23 @@
 #!/bin/bash
 
+FIRST_COMMIT=$1
+LAST_COMMIT=$2
+NORMALIZATION=$3
+
 # current script location. Blessed be SO…
 ME_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CODE_MAAT="java -jar ${ME_DIR}/code-maat-*-standalone.jar"
-JSON_CONVERSION_DIR="/home/dimeo/devel/codemaat-scripts/json-conversion"
+JSON_CONVERSION_DIR="${ME_DIR}/json-conversion"
 
 # check some old vr theater files, just for sport
-FIRST_COMMIT=`git rev-list --max-parents=0 HEAD`
-LAST_COMMIT=8c338cd6a8e71fb8d678ddb4abc02bb26e88af8b
 WATCHED_FILES=.
 
-echo "NUMBER OF COMMITS: 110 (FIXED)"
+if [ $NORMALIZATION -lt 1 ] 
+then
+    echo "Automatic normalization…"
+else
+    echo "${NORMALIZATION} normalization factor"
+fi
 
 GIT_HISTORY=`mktemp -t git_history_XXXX.txt`
 CLOC_RESULT=`mktemp -t cloc_XXXX.csv`
@@ -38,5 +45,5 @@ python ${ME_DIR}/scripts\ 4/merge_comp_freqs.py ${CODEMAT_RESULTS} ${CLOC_RESULT
 
 echo "* converting the complexity into json…"
 pushd $JSON_CONVERSION_DIR
-lein run ${MERGED_RESULTS} 110 >${JSON_RESULTS}
+lein run ${MERGED_RESULTS} ${NORMALIZATION} >${JSON_RESULTS}
 popd
