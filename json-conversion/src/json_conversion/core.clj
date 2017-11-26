@@ -8,8 +8,11 @@
   {:pre [(not (.contains line "\\,"))]}
   (cstring/split line #","))
 
-(defn read-file [filename]
-  (map split-simple-csv-line (drop 1 (split-lines (slurp filename))) ))
+(defn convert-values [s n1 n2]
+  [s (Integer/valueOf n1) (Integer/valueOf n2)])
+
+(defn read-file [raw-contents]
+  (map convert-values (map split-simple-csv-line (drop 1 (split-lines raw-contents)))))
 
 (defn split-module [module]
   (cstring/split module (re-pattern File/separator)))
@@ -20,15 +23,11 @@
 (defn add-file-to-hierarchy [commits hierarchy [module revisions lines :as fields]]
   (assoc-in hierarchy
             (split-module module)
-            (convert-to-file-node (double (/ (Double/valueOf revisions) commits)) lines)))
-
-(defn create-hierarchy [lines-as-fields]
-  {:pre [(not (empty? lines-as-fields))]}
-  (reduce add-file-to-hierarchy {} lines-as-fields))
+            (convert-to-file-node (/ (double revisions) commits) lines)))
 
 (defn hierarchy-from-file [filename commits]
   (reduce (partial add-file-to-hierarchy commits)
-          {}  (read-file filename)))
+          {}  (read-file (slurp filename))))
 
 (defn -main [& args]
   (let [revisions (Integer/valueOf (second args))]
