@@ -42,7 +42,7 @@ pushd ${JSON_CONVERSION_DIR}
 lein run merge ${CODEMAT_RESULTS} ${CLOC_RESULT} >${MERGED_RESULTS}
 popd
 
-echo "* converting the complexity into json…"
+echo "* converting the complexity into json to ${JSON_RESULTS}…"
 pushd ${JSON_CONVERSION_DIR}
 lein run jsonify ${MERGED_RESULTS} ${NORMALIZATION} >${JSON_RESULTS}
 popd
