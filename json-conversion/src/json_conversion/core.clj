@@ -1,18 +1,7 @@
 (ns json-conversion.core
-  (:import [java.io File])
-  (:require [clojure.string :refer [split-lines] :as cstring]
+  (:import [java.io.File])
+  (:require [json-conversion.read :as read]
             [json-conversion.jsonify :as json]))
-
-(defn split-simple-csv-line
-  [line]
-  {:pre [(not (.contains line "\\,"))]}
-  (cstring/split line #","))
-
-(defn convert-values [[s n1 n2]]
-  [s (Integer/valueOf n1) (Integer/valueOf n2)])
-
-(defn read-file [raw-contents]
-  (map convert-values (map split-simple-csv-line (drop 1 (split-lines raw-contents)))))
 
 (defn compute-normalization [xlines normalization]
   (if (pos? normalization) 
@@ -39,10 +28,18 @@
 
 (defn hierarchy-from-file [filename commits]
   (reduce add-file-to-hierarchy 
-          {}  (normalize-data (read-file (slurp filename)) commits)))
+          {}  (normalize-data (read/read-merged-file-contents (slurp filename)) commits)))
+
+(defn merge-data [codemaat-contents cloc-contents]
+  
+)
+
+(defn merge [codemaat-file cloc-file]
+  (merge-data (read/read-codemaat-contents (slurp codemaat-file)) 
+              (read/read-cloc-contents (slurp cloc-file))))
 
 (defn -main [& args]
-  (let [revisions (Integer/valueOf (second args))]
-    (println (json/convert-hierarchy ["root" (hierarchy-from-file (first args)
-                                                                  revisions)]))))
+  (case (first args)
+    "jsonify" (println (json/convert-hierarchy ["root" (hierarchy-from-file (first args) (Integer/valueOf (nth args 2)))]))
+    "merge" (println (merge (first args) (second args)))))
 
